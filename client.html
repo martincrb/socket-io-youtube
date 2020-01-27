@@ -1,0 +1,35 @@
+  
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BettaChat</title>
+</head>
+<body>
+  <ul>
+    <li>
+      <div>
+        <ul id="messages"></ul>
+      </div>
+      <input id="chatBox" class="inputMessage" placeholder="Type here..."/>
+    </li>
+  </ul>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript">
+    var socket = io();
+    $('#chatBox').keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            socket.emit('newmessage', {text: $('#chatBox').val(), timestamp: new Date()});  
+        }
+    });
+    socket.on('newmessage', (data) => {
+        console.log('Received!')
+        $('#messages').append($('<li>').text(data.timestamp + " | " + data.text));
+    })
+
+  </script>
+  
+</body>
+</html>
